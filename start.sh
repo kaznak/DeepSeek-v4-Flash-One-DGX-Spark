@@ -442,7 +442,7 @@ services:
   deepseek-v4-flash:
     image: ${IMAGE_DIGEST}
     pull_policy: always
-    restart: ${RESTART_POLICY}   # CRITICAL: never death-spiral the host. A failing
+    restart: "${RESTART_POLICY}"   # CRITICAL: never death-spiral the host. A failing
     # 256k boot must stop after ONE failure (bad boots OOM-looping under
     # 'unless-stopped' pushed host RAM negative and hard-reset the box). If it
     # fails once, ./start.sh again later.
