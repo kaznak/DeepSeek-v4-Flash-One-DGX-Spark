@@ -75,6 +75,9 @@ MAX_NUM_BATCHED_TOKENS="${MAX_NUM_BATCHED_TOKENS:-8224}"  # also sizes+locks the
 MODE="${MODE:-dspark}"                 # fixed K5 DSpark speculative draft
 GPU_MEMORY_UTILIZATION="${GPU_MEMORY_UTILIZATION:-0.94}"   # 256k needs the extra ~1.2 GiB (0.93 leaves only 6.32 GiB KV < 6.99 needed). Boot-safe BECAUSE restart: on-failure:1 can never loop: worst case one clean exit. Requires free host RAM >= 0.94*121.63 = 114.3 GiB at launch (check free -h; stop the old container first).
 VERIFY_MODEL_CHECKSUMS="${VERIFY_MODEL_CHECKSUMS:-1}"
+# Container restart policy. Under a supervisor that owns restarts (llama-swap),
+# set "no": a docker-side retry would run outside the supervisor's view.
+RESTART_POLICY="${RESTART_POLICY:-on-failure:1}"
 
 # --- Runtime refusal-direction ablation (OFF by default) -------------------
 # ABLATE=1 mounts the overlay and auto-provisions files/direction_r1.pt
@@ -439,7 +442,7 @@ services:
   deepseek-v4-flash:
     image: ${IMAGE_DIGEST}
     pull_policy: always
-    restart: on-failure:1   # CRITICAL: never death-spiral the host. A failing
+    restart: ${RESTART_POLICY}   # CRITICAL: never death-spiral the host. A failing
     # 256k boot must stop after ONE failure (bad boots OOM-looping under
     # 'unless-stopped' pushed host RAM negative and hard-reset the box). If it
     # fails once, ./start.sh again later.

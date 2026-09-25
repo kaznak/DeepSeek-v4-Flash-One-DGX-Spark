@@ -20,6 +20,10 @@ set -Eeuo pipefail
 cd "$(dirname "$0")/.."
 
 export SERVING_PORT="${1:?usage: gx10/serve.sh <port>}"
+# The supervisor decides whether to start again. A docker-side retry after a
+# failed boot (on-failure:1) would come up after this script has exited, holding
+# ~114 GiB the supervisor does not know about.
+export RESTART_POLICY=no
 ./gx10/start.sh --no-wait
 
 docker compose -f compose.yml logs -f --no-log-prefix &
