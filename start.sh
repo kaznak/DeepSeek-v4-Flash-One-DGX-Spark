@@ -65,7 +65,8 @@ MODEL_REVISION="${MODEL_REVISION:-22f28d32b9b29b4352eaa380ff8c2c170b2847ab}"
 # from the environment or a local .env next to compose.yml. Exported so the
 # generated compose.yml's ${HF_TOKEN:-} resolves at `docker compose up` time.
 export HF_TOKEN="${HF_TOKEN:-}"
-IMAGE_DIGEST="ghcr.io/0xsero/deepseek-v4-flash-0731-spark-sparkinfer@sha256:2e077489a83a0360952828051fe7f7a32c1801e5ce8436d85f7267583d614ff4"
+# Overridable so the same digest can be pulled through a registry mirror.
+IMAGE_DIGEST="${IMAGE_DIGEST:-ghcr.io/0xsero/deepseek-v4-flash-0731-spark-sparkinfer@sha256:2e077489a83a0360952828051fe7f7a32c1801e5ce8436d85f7267583d614ff4}"
 
 SERVED_MODEL_NAME="${SERVED_MODEL_NAME:-deepseek-v4-flash-0731}"
 MAX_MODEL_LEN="${MAX_MODEL_LEN:-384000}"   # single deep context: ~13% under the worst observed cold-boot pool (439,622 tokens, util 0.94). If a boot ever fails the "KV cache needed" check, lower this.

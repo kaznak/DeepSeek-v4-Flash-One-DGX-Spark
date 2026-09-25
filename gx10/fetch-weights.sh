@@ -23,7 +23,8 @@ cd "$(dirname "$0")/.."
 MODEL_REPO=0xSero/deepseek-v4-flash-0731-spark
 MODEL_REVISION=22f28d32b9b29b4352eaa380ff8c2c170b2847ab
 FETCH_REVISION="${FETCH_REVISION:-ce5ff0f1efb2e184aafc759d281bfae47d3a359c}"
-IMAGE_DIGEST="$(sed -n 's/^IMAGE_DIGEST="\(.*\)"$/\1/p' start.sh)"
+# shellcheck disable=SC2016  # the pattern matches the literal ${IMAGE_DIGEST:-...} in start.sh
+IMAGE_DIGEST="${IMAGE_DIGEST:-$(sed -n 's/^IMAGE_DIGEST="${IMAGE_DIGEST:-\(.*\)}"$/\1/p' start.sh)}"
 repo_dir="hf-hub/hub/models--${MODEL_REPO//\//--}"
 snapshot_host="$repo_dir/snapshots/$MODEL_REVISION"
 snapshot_in_container="/hf-cache/hub/models--${MODEL_REPO//\//--}/snapshots/$MODEL_REVISION"
